@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabelle</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+<h1 class="text-center">Temperaturen am Fichtelberg</h1>
+{% if request.user.username == "admin" %}
+Du bist {{request.user.username}}<br>
+{% else %}
+<span style="background-color: coral">Ich kenne dich nicht</span><br>
+{% endif %}
+
+<button type="button" class="btn btn-info"><a href="{% url 'admin' %}">Zum Login</a></button>
+
+
+<form action="{% url 'index' %}" method="post">
+    {% csrf_token %}
+<button name= "newvalue" value={{anfangsDatenpunkt}}"+100" type="button" class="btn btn-info"><a href="{% url 'index' %}">Ältere Einträge</a></button>
+ <!-- die beiden Knöpfe ändern den Wertebereich, der anzuzeigenden Tabelle
+  Fragestellung: sendet der Knopf bereits jetzt schon den "value" wert oder sendet er "Ältere Einträge"
+  -->
+<button name= "newvalue" value="-100" type="button" class="btn btn-info"><a href="{% url 'index' %}">Neuere Einträge</a></button>
+</form>
+
+
+<button type="button"><a href="{% url 'pie-chart' %}">hier soll es zum diagramm gehen</a></button>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+<div class="container">
+
+    <button type="button" class="btn btn-info btn-lg btn-block"><a href="{% url 'infotext' %}">Zum Infotext</a></button>
+
+
+    <div class="row">
+        <div class="col-xs-12 col-md-4" style="background-color:grey">
+            Niedrigsttemperatur: {{minimum}}
+        </div>
+        <div class="col-xs-12 col-md-4" style="background-color:orange">
+            Durchschnittliche Temperatur: {{average}}
+        </div>
+        <div class="col-xs-12 col-md-4 " style="background-color:purple">
+            Höchsttemperatur: {{maximum}}
+        </div>
+        <div class="col-xs-12 col-md-12">
+            <div class="table-responsive">
+                <table class="table table-hover">
+
+                    <thead class="thead-dark">
+                    <tr>
+                        <th>id</th>
+                        <th>Messwert</th>
+                        <th>created at</th>
+                        <th>Standort</th>
+                    </tr>
+
+                    </thead>
+                    <tbody>
+                    {% for messwert in messwerte %}
+                    <tr>
+                        <td>{{messwert.id}}</td>
+                        <td>{{messwert.wert}}{{messwert.messeinheit}}</td>
+                        <td>{{messwert.created_at}}</td>
+                        <td>{{messwert.standort}}</td>
+                    </tr>
+                    {% endfor %}
+
+                    </tbody>
+
+
+                </table>
+            </div>
+        </div>
+    </div>
+     <button type="button" class="btn btn-outline-secondary btn-lg btn-block"><a href="{% url 'index' %}">Nächste Seite aka. wie ändere ich [0:100] zu [100:200]</a></button>
+</div>
+
+
+
+</body>
+</html>
+
+
+
